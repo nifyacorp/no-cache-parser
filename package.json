@@ -1,0 +1,24 @@
+{
+  "name": "no-cache-parser",
+  "version": "0.1.0",
+  "description": "Configurable generic parser service without caching (user-defined subscription types)",
+  "type": "module",
+  "main": "src/index.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "dotenv": "^16.4.1",
+    "axios": "^1.6.8",
+    "cheerio": "^1.0.0-rc.12",
+    "@google-cloud/pubsub": "^3.7.0",
+    "@google-cloud/secret-manager": "^4.4.1"
+  },
+  "keywords": ["parser", "generic", "nifya"],
+  "license": "MIT"
+} 
