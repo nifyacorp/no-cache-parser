@@ -1,12 +1,25 @@
 import { createValidationError } from '../utils/errors/AppError.js';
+import { validateAnalyzeRequest } from '../utils/schemas/analyzeRequest.js';
 
 export function validationMiddleware(req, res, next) {
-  const { texts, source } = req.body;
-  if (!texts || !Array.isArray(texts) || texts.length === 0) {
-    return next(createValidationError('texts must be a non-empty array'));
+  const payload = req.body || {};
+  const result = validateAnalyzeRequest(payload);
+
+  if (!result.success) {
+    const issues = result.error.issues || result.error.errors || [];
+    return next(
+      createValidationError('Invalid analyze request payload', {
+        issues
+      })
+    );
   }
-  if (!source?.url) {
-    return next(createValidationError('source.url is required'));
-  }
+
+  req.parserRequest = {
+    ...result.data,
+    metadata: result.data.metadata || {}
+  };
+
   next();
-} 
+}
+
+export default validationMiddleware;
