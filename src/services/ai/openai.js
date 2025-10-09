@@ -69,7 +69,9 @@ export async function analyzeWithOpenAI(items, prompt, requestId, options = {}) 
       model,
       temperature,
       max_output_tokens: maxOutputTokens,
-      response_format: { type: 'json_schema', json_schema: RESPONSE_SCHEMA },
+      text: {
+        format: { type: 'json_schema', json_schema: RESPONSE_SCHEMA }
+      },
       input: [
         {
           role: 'system',
@@ -83,29 +85,32 @@ export async function analyzeWithOpenAI(items, prompt, requestId, options = {}) 
     });
 
     const text = extractText(response).trim();
-    if (!text) {
-      throw createExternalApiError('OpenAI returned empty response', {
-        code: 'OPENAI_EMPTY_RESPONSE',
-        service: 'openai'
-      });
+    let payload = null;
+    if (response?.output_parsed) {
+      payload = response.output_parsed;
+    } else {
+      if (!text) {
+        throw createExternalApiError('OpenAI returned empty response', {
+          code: 'OPENAI_EMPTY_RESPONSE',
+          service: 'openai'
+        });
+      }
+      try {
+        payload = JSON.parse(text);
+      } catch (err) {
+        return {
+          matches: [],
+          metadata: {
+            error: `Failed to parse OpenAI response: ${err.message}`,
+            raw_response: text.slice(0, 500),
+            model_used: model,
+            provider: 'openai'
+          }
+        };
+      }
     }
 
-    let parsed;
-    try {
-      parsed = JSON.parse(text);
-    } catch (err) {
-      return {
-        matches: [],
-        metadata: {
-          error: `Failed to parse OpenAI response: ${err.message}`,
-          raw_response: text.slice(0, 500),
-          model_used: model,
-          provider: 'openai'
-        }
-      };
-    }
-
-    const normalised = normaliseMatches(parsed);
+    const normalised = normaliseMatches(payload);
     normalised.metadata = {
       ...(normalised.metadata || {}),
       provider: 'openai',
