@@ -27,12 +27,12 @@ const config = {
   server: { port: process.env.PORT || 8080 },
   gcp: { projectId: process.env.GOOGLE_CLOUD_PROJECT || '' },
   services: {
-    gemini: {
-      apiKey: process.env.GEMINI_API_KEY || '',
-      model: process.env.GEMINI_MODEL || 'models/gemini-1.5-pro-latest',
-      temperature: parseNumber(process.env.GEMINI_TEMPERATURE, 0.2),
-      maxOutputTokens: parseNumber(process.env.GEMINI_MAX_OUTPUT_TOKENS, 8192),
-      maxInputTokens: parseNumber(process.env.GEMINI_MAX_INPUT_TOKENS, 60000)
+    openai: {
+      apiKey: process.env.OPENAI_API_KEY || '',
+      model: process.env.OPENAI_MODEL || 'gpt-5-mini-2025-08-07',
+      temperature: parseNumber(process.env.OPENAI_TEMPERATURE, 0.2),
+      maxOutputTokens: parseNumber(process.env.OPENAI_MAX_OUTPUT_TOKENS, 8192),
+      maxInputTokens: parseNumber(process.env.OPENAI_MAX_INPUT_TOKENS, 60000)
     },
     pubsub: {
       topicId: process.env.PUBSUB_TOPIC_NAME || 'custom-notifications',
@@ -64,7 +64,7 @@ const config = {
   ai: {
     maxItemsPerPrompt: parseNumber(process.env.AI_MAX_ITEMS_PER_PROMPT, 20),
     maxCharactersPerItem: parseNumber(process.env.AI_MAX_CHARS_PER_ITEM, 4000),
-    provider: process.env.AI_PROVIDER || 'gemini'
+    provider: process.env.AI_PROVIDER || 'openai'
   },
   database: {
     url: process.env.DATABASE_URL || ''
@@ -75,7 +75,7 @@ export async function loadSecrets() {
   const client = new SecretManagerServiceClient();
   const toFetch = [];
   if (!config.auth.apiKey) toFetch.push(['auth.apiKey', 'PARSER_API_KEY']);
-  if (!config.services.gemini.apiKey) toFetch.push(['services.gemini.apiKey', 'GEMINI_API_KEY']);
+  if (!config.services.openai.apiKey) toFetch.push(['services.openai.apiKey', 'OPENAI_API_KEY']);
 
   if (toFetch.length === 0) return;
   const projectId = config.gcp.projectId;
@@ -111,8 +111,8 @@ export function validateConfig() {
       .reduce((o, k) => (o ? o[k] : undefined), config);
     if (!value) missing.push(key);
   });
-  if (!config.services.gemini.apiKey) {
-    missing.push('services.gemini.apiKey');
+  if (!config.services.openai.apiKey) {
+    missing.push('services.openai.apiKey');
   }
   return missing;
 }

@@ -18,7 +18,7 @@
     "cheerio": "^1.0.0-rc.12",
     "@google-cloud/pubsub": "^4.0.7",
     "@google-cloud/secret-manager": "^5.0.0",
-    "@google/generative-ai": "^0.24.0",
+    "openai": "^4.104.0",
     "pino": "^8.17.0",
     "pino-pretty": "^11.1.0",
     "zod": "^3.22.4"

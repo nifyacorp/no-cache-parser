@@ -1,7 +1,7 @@
 import config from '../../config/config.js';
 import { createServiceError } from '../../utils/errors/AppError.js';
 import logger from '../../utils/logger.js';
-import { analyzeWithGemini } from './gemini.js';
+import { analyzeWithOpenAI } from './openai.js';
 
 const log = logger.child({ module: 'ai-service' });
 
@@ -21,7 +21,7 @@ function limitItems(items = []) {
 }
 
 export async function analyzeGenericItems(items, prompt, requestId, options = {}) {
-  const provider = (options.provider || config.ai.provider || 'gemini').toLowerCase();
+  const provider = (options.provider || config.ai.provider || 'openai').toLowerCase();
   const preparedItems = limitItems(items);
 
   log.debug('Dispatching AI analysis', {
@@ -32,8 +32,8 @@ export async function analyzeGenericItems(items, prompt, requestId, options = {}
   });
 
   switch (provider) {
-    case 'gemini':
-      return analyzeWithGemini(preparedItems, prompt, requestId, {
+    case 'openai':
+      return analyzeWithOpenAI(preparedItems, prompt, requestId, {
         ...options,
         maxItems: config.ai.maxItemsPerPrompt
       });

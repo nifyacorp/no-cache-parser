@@ -41,8 +41,8 @@ export async function analyzeText(req, res, next) {
 
     const aiOptions = {
       provider: ai.provider || config.ai.provider,
-      temperature: ai.temperature ?? config.services.gemini.temperature,
-      maxOutputTokens: ai.maxOutputTokens ?? config.services.gemini.maxOutputTokens
+      temperature: ai.temperature ?? config.services.openai.temperature,
+      maxOutputTokens: ai.maxOutputTokens ?? config.services.openai.maxOutputTokens
     };
 
     const analysisResults = await Promise.all(
