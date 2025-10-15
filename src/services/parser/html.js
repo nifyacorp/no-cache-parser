@@ -1,4 +1,4 @@
-import cheerio from 'cheerio';
+import { load } from 'cheerio';
 import crypto from 'crypto';
 import config from '../../config/config.js';
 
@@ -51,7 +51,7 @@ function clampContent(content, maxChars) {
  * @returns {{ items: Array<{id:string,title:string,content:string,url:string,date:string,summary:string,links:Object}> }}
  */
 export function parseHtml({ html, url, selector, extract = {}, maxItems }) {
-  const $ = cheerio.load(html);
+  const $ = load(html);
   const primarySelector = selector || extract.selector;
   let targetNodes = primarySelector ? $(primarySelector) : $('body');
 
