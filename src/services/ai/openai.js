@@ -69,8 +69,9 @@ export async function analyzeWithOpenAI(items, prompt, requestId, options = {}) 
       model,
       temperature,
       max_output_tokens: maxOutputTokens,
-      text: {
-        format: { type: 'json_schema', json_schema: RESPONSE_SCHEMA }
+      response_format: {
+        type: 'json_schema',
+        json_schema: RESPONSE_SCHEMA
       },
       input: [
         {
