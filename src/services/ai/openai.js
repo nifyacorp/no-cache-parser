@@ -67,7 +67,8 @@ export async function analyzeWithOpenAI(items, prompt, requestId, options = {}) 
   try {
     const textFormat = {
       type: 'json_schema',
-      json_schema: RESPONSE_SCHEMA
+      name: RESPONSE_SCHEMA.name,
+      schema: RESPONSE_SCHEMA.schema
     };
 
     const response = await client.responses.create({
