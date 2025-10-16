@@ -65,14 +65,16 @@ export async function analyzeWithOpenAI(items, prompt, requestId, options = {}) 
   log.debug('Invoking OpenAI', { requestId, item_count: items.length, model });
 
   try {
+    const textFormat = {
+      type: 'json_schema',
+      json_schema: RESPONSE_SCHEMA
+    };
+
     const response = await client.responses.create({
       model,
       temperature,
       max_output_tokens: maxOutputTokens,
-      response_format: {
-        type: 'json_schema',
-        json_schema: RESPONSE_SCHEMA
-      },
+      text: { format: textFormat },
       input: [
         {
           role: 'system',
