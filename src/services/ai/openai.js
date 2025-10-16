@@ -24,7 +24,28 @@ const RESPONSE_SCHEMA = {
             summary: { type: 'string' },
             relevance_score: { type: ['number', 'string'] },
             url: { type: 'string' },
-            tags: { type: 'array', items: { type: 'string' } }
+            tags: { type: 'array', items: { type: 'string' } },
+            links: {
+              anyOf: [
+                {
+                  type: 'object',
+                  additionalProperties: false,
+                  required: ['html'],
+                  properties: {
+                    html: { type: 'string' }
+                  }
+                },
+                {
+                  type: 'object',
+                  additionalProperties: false,
+                  required: ['html', 'pdf'],
+                  properties: {
+                    html: { type: 'string' },
+                    pdf: { type: 'string' }
+                  }
+                }
+              ]
+            }
           }
         }
       }
